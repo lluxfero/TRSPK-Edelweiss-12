@@ -161,45 +161,54 @@ collection_m.Add((1, 4));
 collection_m.Add((2, 1));
 collection_m.Add((1, 3));
 collection_m.Add((2, 5));
+List<(int, int)> collection_norm = collection_m;
 Console.WriteLine("Элементы коллеции без сортировки:");
 for (int i = 0; i < collection_m.Count; i++)
     Console.WriteLine(collection_m[i].ToString());
 
 Console.WriteLine("\n=== М (обычный) ===");
 
-for (int i = collection_m.Count - 1; i >= 0; i--)
+for (int i = collection_norm.Count - 1; i >= 0; i--)
 {
     for (int j = 0; j < i; j++)
     {
-        if (collection_m[j].Item1 > collection_m[j + 1].Item1)
+        if (collection_norm[j].Item1 > collection_norm[j + 1].Item1)
         {
-            var temp = collection_m[j];
-            collection_m[j] = collection_m[j + 1];
-            collection_m[j + 1] = temp;
+            var temp = collection_norm[j];
+            collection_norm[j] = collection_norm[j + 1];
+            collection_norm[j + 1] = temp;
         }
     }
 }
 
-for (int i = collection_m.Count - 1; i >= 0; i--)
+for (int i = collection_norm.Count - 1; i >= 0; i--)
 {
     for (int j = 0; j < i; j++)
     {
-        if (collection_m[j].Item2 < collection_m[j + 1].Item2 && collection_m[j].Item1 == collection_m[j + 1].Item1)
+        if (collection_norm[j].Item2 < collection_norm[j + 1].Item2 && collection_norm[j].Item1 == collection_norm[j + 1].Item1)
         {
-            var temp = collection_m[j];
-            collection_m[j] = collection_m[j + 1];
-            collection_m[j + 1] = temp;
+            var temp = collection_norm[j];
+            collection_norm[j] = collection_norm[j + 1];
+            collection_norm[j + 1] = temp;
         }
     }
 }
 
 Console.WriteLine("Элементы коллеции с сортировкой:");
-for (int i = 0; i < collection_m.Count; i++)
-    Console.WriteLine(collection_m[i].ToString());
+for (int i = 0; i < collection_norm.Count; i++)
+    Console.WriteLine(collection_norm[i].ToString());
 
 Console.WriteLine("\n=== М (LINQ) ===");
 
+List<(int, int)> collection_linq = collection_m;
+var result_m = collection_linq
+    .OrderByDescending(x => x.Item2)
+    .OrderBy(x => x.Item1)
+    .ToList();
 
+Console.WriteLine("Элементы коллеции с сортировкой:");
+for (int i = 0; i < result_m.Count; i++)
+    Console.WriteLine(result_m[i].ToString());
 
 #endregion
 
