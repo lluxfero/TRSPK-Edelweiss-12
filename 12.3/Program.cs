@@ -1,4 +1,8 @@
-﻿int[] arr0 = { -5, 4, 9, -2, 3, 15, 1, 7, -6, 10};
+﻿using System.Reflection;
+
+#region ПУНКТ И
+
+int[] arr0 = { -5, 4, 9, -2, 3, 15, 1, 7, -6, 10};
 
 Console.WriteLine("=== И (обычный) ===");
 MyCollection mycollection0 = new MyCollection();
@@ -29,7 +33,10 @@ mycollection1.EvenSum = select0.Sum(); // получение суммы спис
 mycollection1.UnevenSum = select1.Sum();
 Console.WriteLine(mycollection1);
 
+#endregion
 
+
+#region ПУНКТ К
 
 var arrWorkers = new Worker[]
 {
@@ -41,6 +48,7 @@ var arrWorkers = new Worker[]
     new Worker ("Новиков", 58),
     new Worker ("Петров", 139)
 };
+
 
 Console.WriteLine("\n=== К (обычный) ===");
 List<Worker> listResult0 = new() { arrWorkers[0] };
@@ -78,7 +86,122 @@ foreach (var worker in select2)
 }
 for (int j = 0; j < listResult1.Count; j++) Console.WriteLine(listResult1[j]);
 
+#endregion
 
+
+#region ПУНКТ Л
+
+int[] arr_l = { 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 33, 33, 33 }; // коллекция повторяющихся элементов
+Console.WriteLine("Элементы исходного массива:");
+for (int i = 0; i < arr_l.Length; i++)
+    Console.Write($"{arr_l[i]} ");
+
+Console.WriteLine("\n=== Л (обычный) ===");
+int[,] arr_l_count = new int[2, arr_l.Length]; // массив подсчёта повторений каждого элемента массива arr_l
+List<int> arr_l_unique = new();
+for (int i = 0; i < arr_l.Length; i++) // заполнение массива подсчёта
+{
+    int j = 0;
+    while (j < arr_l_count.GetLength(1) && arr_l_count[1, j] != 0) // если кол-во текущего элемента ноль, то мы его встречаем первый раз => выходим из цикла и добавляем
+    {
+        if (arr_l_count[0, j] == arr_l[i])
+        {
+            arr_l_count[1, j]++;
+            break;
+        }
+        j++;
+    }
+
+    if (arr_l_count[1, j] == 0)
+    {
+        arr_l_count[0, j] = arr_l[i];
+        arr_l_count[1, j] = 1;
+    }
+}
+
+for (int i = 0; (i < arr_l_count.GetLength(1)) && (arr_l_count[1, i] != 0); i++)
+{
+    if (arr_l_count[1, i] == 3)
+        arr_l_unique.Add(arr_l_count[0, i]);
+}
+
+
+Console.WriteLine();
+Console.WriteLine("Элементы, которые повторяются ровно 3 раза:");
+for (int i = 0; i < arr_l_unique.Count; i++)
+    Console.Write($"{arr_l_unique[i]} ");
+
+
+Console.WriteLine("\n=== Л (LINQ) ===");
+
+var select_l = arr_l
+    .GroupBy(a => a)
+    .Where(a => a.Count() == 3)
+    .Select(a => new { Value = a.Key, Count = a.Count() });
+
+List<int> result_l = new();
+
+foreach (var select in select_l)
+{
+    result_l.Add(select.Value);
+}
+
+Console.WriteLine("Элементы, которые повторяются ровно 3 раза:");
+for (int i = 0; i < result_l.Count; i++)
+    Console.Write($"{result_l[i]} ");
+
+#endregion
+
+
+#region ПУНКТ М
+
+List<(int, int)> collection_m = new();
+collection_m.Add((1, 2));
+collection_m.Add((1, 4));
+collection_m.Add((2, 1));
+collection_m.Add((1, 3));
+collection_m.Add((2, 5));
+Console.WriteLine("Элементы коллеции без сортировки:");
+for (int i = 0; i < collection_m.Count; i++)
+    Console.WriteLine(collection_m[i].ToString());
+
+Console.WriteLine("\n=== М (обычный) ===");
+
+for (int i = collection_m.Count - 1; i >= 0; i--)
+{
+    for (int j = 0; j < i; j++)
+    {
+        if (collection_m[j].Item1 > collection_m[j + 1].Item1)
+        {
+            var temp = collection_m[j];
+            collection_m[j] = collection_m[j + 1];
+            collection_m[j + 1] = temp;
+        }
+    }
+}
+
+for (int i = collection_m.Count - 1; i >= 0; i--)
+{
+    for (int j = 0; j < i; j++)
+    {
+        if (collection_m[j].Item2 < collection_m[j + 1].Item2 && collection_m[j].Item1 == collection_m[j + 1].Item1)
+        {
+            var temp = collection_m[j];
+            collection_m[j] = collection_m[j + 1];
+            collection_m[j + 1] = temp;
+        }
+    }
+}
+
+Console.WriteLine("Элементы коллеции с сортировкой:");
+for (int i = 0; i < collection_m.Count; i++)
+    Console.WriteLine(collection_m[i].ToString());
+
+Console.WriteLine("\n=== М (LINQ) ===");
+
+
+
+#endregion
 
 class MyCollection // для пункта И
 {
@@ -115,3 +238,4 @@ class Worker // для пункта К
         return $"фамилия: {Name} | зарплата: {Salary}";
     }
 }
+
