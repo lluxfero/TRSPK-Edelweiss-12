@@ -160,15 +160,15 @@ collection_m.Add((1, 2));
 collection_m.Add((1, 4));
 collection_m.Add((2, 1));
 collection_m.Add((1, 3));
-collection_m.Add((2, 5));
-List<(int, int)> collection_norm = collection_m;
+collection_m.Add((2, 5)); // в этих строчках заполняем коллекцию
+List<(int, int)> collection_norm = collection_m; // копируем коллекцию
 Console.WriteLine("Элементы коллеции без сортировки:");
 for (int i = 0; i < collection_m.Count; i++)
-    Console.WriteLine(collection_m[i].ToString());
+    Console.WriteLine(collection_m[i].ToString()); // вывод коллекции
 
 Console.WriteLine("\n=== М (обычный) ===");
 
-for (int i = collection_norm.Count - 1; i >= 0; i--)
+for (int i = collection_norm.Count - 1; i >= 0; i--) // сортировка по первому элементу
 {
     for (int j = 0; j < i; j++)
     {
@@ -181,7 +181,7 @@ for (int i = collection_norm.Count - 1; i >= 0; i--)
     }
 }
 
-for (int i = collection_norm.Count - 1; i >= 0; i--)
+for (int i = collection_norm.Count - 1; i >= 0; i--) // соритровка по второму элементу, не изменяя порядок по первому
 {
     for (int j = 0; j < i; j++)
     {
@@ -194,7 +194,7 @@ for (int i = collection_norm.Count - 1; i >= 0; i--)
     }
 }
 
-Console.WriteLine("Элементы коллеции с сортировкой:");
+Console.WriteLine("Элементы коллеции с сортировкой:"); // вывод отсортированной
 for (int i = 0; i < collection_norm.Count; i++)
     Console.WriteLine(collection_norm[i].ToString());
 
@@ -202,15 +202,48 @@ Console.WriteLine("\n=== М (LINQ) ===");
 
 List<(int, int)> collection_linq = collection_m;
 var result_m = collection_linq
-    .OrderByDescending(x => x.Item2)
-    .OrderBy(x => x.Item1)
-    .ToList();
+    .OrderByDescending(x => x.Item2) // соритруем в обратном порядке по второму элементу
+    .OrderBy(x => x.Item1) // соритруем обычно по первому, порядок по второму при этом не изменяется
+    .ToList(); // преобразовываем в список
 
-Console.WriteLine("Элементы коллеции с сортировкой:");
+Console.WriteLine("Элементы коллеции с сортировкой:"); // выводим
 for (int i = 0; i < result_m.Count; i++)
     Console.WriteLine(result_m[i].ToString());
 
 #endregion
+
+
+#region ПУНКТ Н
+
+Console.WriteLine("\n=== Н (LINQ) ===");
+
+var arra = new List<int> { 1, 2, 3 };
+
+var arrb = new List<double> { 1.1, 2.2, 3.3 };
+
+var arrc = new List<string> { "one", "two", "three" };
+
+var result_n = arra
+    .Join(arrb,  // присоединяем второй список
+    ara => 1,  // 1 и там, и там, чтобы объединялись все поля
+    arb => 1, 
+    (ara, arb) => new { a = ara, b = arb }) // и выводим их в анонимный класс с двумя полями
+    .Join(arrc, // тут же объединяем с третьим списком
+    arab => 1,  // те же условия
+    arc => 1,
+    (arab, arc) => new { ab = arab, c = arc}); // выводим в анонимный класс, где первое поле - экземпляр первого анонимного класс { (a, b), c }
+string abc_str = String.Empty;
+foreach(var abc in result_n)
+{
+    abc_str += $"({abc.ab.a}, {abc.ab.b}, {abc.c}), "; // записываем в строку
+}
+abc_str = abc_str.Trim(); // обрезаем пробел
+abc_str = abc_str.Trim(','); // обрезаем запятую
+
+Console.WriteLine(abc_str);
+
+#endregion
+
 
 class MyCollection // для пункта И
 {
