@@ -71,7 +71,7 @@ foreach (var worker in select2)
     int sum = 0;
     foreach (var i in worker)
     {
-        sum = i.Salary; // в нулевом хранится сумма зарплат работника
+        sum = i.Salary; // в нулевой записи хранится сумма зарплат работника
         break;
     }
     listResult1.Add(new Worker(worker.Key, sum));
