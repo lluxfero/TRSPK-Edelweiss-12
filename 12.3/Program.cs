@@ -27,13 +27,19 @@ Console.WriteLine(mycollection0);
 Console.WriteLine("\n==== И (LINQ) =====");
 MyCollection mycollection1 = new MyCollection();
 var select0 = arr0
-    .GroupBy(a => a % 2 == 0);
+    .GroupBy(a => a % 2 == 0)
+    .Select(g => new { Even = g.Key, Sum = g.Sum() });
+foreach(var select1 in select0)
+{
+    string even = select1.Even ? "Even" : "Odd";
+    Console.WriteLine($"{even} Sum = {select1.Sum}");
+}
 
-mycollection1.EvenGr = select0.ToList(); // получение списка
-mycollection1.UnevenGr = select1.ToList();
-mycollection1.EvenSum = mycollection1.EvenGr.Sum(); // получение суммы списка
-mycollection1.UnevenSum = mycollection1.UnevenGr.Sum();
-Console.WriteLine(mycollection1);
+//mycollection1.EvenGr = select0.ToList(); // получение списка
+//mycollection1.UnevenGr = select1.ToList();
+//mycollection1.EvenSum = mycollection1.EvenGr.Sum(); // получение суммы списка
+//mycollection1.UnevenSum = mycollection1.UnevenGr.Sum();
+//Console.WriteLine(mycollection1);
 
 #endregion
 
@@ -77,7 +83,7 @@ Console.WriteLine("\n==== К (LINQ) =====");
 List<Worker> listResult1 = arrWorkers
     .GroupBy(w => w.Name)
     .Select(w => new Worker(w.Key, w.First().Salary))
-    .ToList(); 
+    .ToList();
 
 for (int j = 0; j < listResult1.Count; j++) Console.WriteLine(listResult1[j]);
 
@@ -198,7 +204,7 @@ Console.WriteLine("\n=== М (LINQ) ===");
 List<(int, int)> collection_linq = collection_m;
 var result_m = collection_linq
     .OrderByDescending(x => x.Item2) // соритруем в обратном порядке по второму элементу
-    .ThenBy(x => x.Item1) // сортируем обычно по первому, порядок по второму при этом не изменяется
+    .ThenBy(x => x.Item1) // затем по первому, порядок по второму при этом не изменяется
     .ToList(); // преобразовываем в список
 
 Console.WriteLine("Элементы коллеции с сортировкой:"); // выводим
@@ -234,6 +240,11 @@ foreach(var abc in result_n)
 }
 abc_str = abc_str.Trim(); // обрезаем пробел
 abc_str = abc_str.Trim(','); // обрезаем запятую
+
+var retVal = from a in arra
+             from b in arrb
+             from c in arrc
+             select new { a, b, c };
 
 Console.WriteLine(abc_str);
 
