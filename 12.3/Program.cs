@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Net.Http.Headers;
+using System.Reflection;
 
 #region ПУНКТ И
 
@@ -24,8 +26,8 @@ Console.WriteLine(mycollection0);
 
 Console.WriteLine("\n==== И (LINQ) =====");
 MyCollection mycollection1 = new MyCollection();
-var select0 = arr0.Where(a => a % 2 == 0); // запрос для четной группы
-var select1 = arr0.Where(a => a % 2 != 0); // запрос для нечетной группы
+var select0 = arr0
+    .GroupBy(a => a % 2 == 0);
 
 mycollection1.EvenGr = select0.ToList(); // получение списка
 mycollection1.UnevenGr = select1.ToList();
@@ -72,18 +74,11 @@ for (int j = 0; j < listResult0.Count; j++) Console.WriteLine(listResult0[j]);
 
 
 Console.WriteLine("\n==== К (LINQ) =====");
-List<Worker> listResult1 = new();
-var select2 = arrWorkers.GroupBy(w => w.Name); // запрос группировки
-foreach (var worker in select2)
-{
-    int sum = 0;
-    foreach (var i in worker)
-    {
-        sum = i.Salary; // в нулевой записи хранится сумма зарплат работника
-        break;
-    }
-    listResult1.Add(new Worker(worker.Key, sum));
-}
+List<Worker> listResult1 = arrWorkers
+    .GroupBy(w => w.Name)
+    .Select(w => new Worker(w.Key, w.First().Salary))
+    .ToList(); 
+
 for (int j = 0; j < listResult1.Count; j++) Console.WriteLine(listResult1[j]);
 
 #endregion
@@ -92,7 +87,7 @@ for (int j = 0; j < listResult1.Count; j++) Console.WriteLine(listResult1[j]);
 #region ПУНКТ Л
 
 int[] arr_l = { 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 33, 33, 33 }; // коллекция повторяющихся элементов
-Console.WriteLine("Элементы исходного массива:");
+Console.WriteLine("\nЭлементы исходного массива:");
 for (int i = 0; i < arr_l.Length; i++)
     Console.Write($"{arr_l[i]} ");
 
