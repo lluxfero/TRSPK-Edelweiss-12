@@ -31,8 +31,8 @@ var select0 = arr0
 
 mycollection1.EvenGr = select0.ToList(); // получение списка
 mycollection1.UnevenGr = select1.ToList();
-mycollection1.EvenSum = select0.Sum(); // получение суммы списка
-mycollection1.UnevenSum = select1.Sum();
+mycollection1.EvenSum = mycollection1.EvenGr.Sum(); // получение суммы списка
+mycollection1.UnevenSum = mycollection1.UnevenGr.Sum();
 Console.WriteLine(mycollection1);
 
 #endregion
@@ -198,7 +198,7 @@ Console.WriteLine("\n=== М (LINQ) ===");
 List<(int, int)> collection_linq = collection_m;
 var result_m = collection_linq
     .OrderByDescending(x => x.Item2) // соритруем в обратном порядке по второму элементу
-    .OrderBy(x => x.Item1) // соритруем обычно по первому, порядок по второму при этом не изменяется
+    .ThenBy(x => x.Item1) // сортируем обычно по первому, порядок по второму при этом не изменяется
     .ToList(); // преобразовываем в список
 
 Console.WriteLine("Элементы коллеции с сортировкой:"); // выводим
